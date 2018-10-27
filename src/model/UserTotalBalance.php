@@ -5,9 +5,10 @@ class UserTotalBalance extends Model
 {
     protected $table;
 
-    function __construct()
+    function __construct(array $attributes = array())
     {
-        $this->table = config('user_total_balance_table');
+        parent::__construct($attributes);
+        $this->table = config('Wallet.user_total_balance_table');
     }
 
     /**

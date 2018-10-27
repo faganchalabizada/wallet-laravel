@@ -22,31 +22,55 @@ class WalletApi
      * This method is used for create a transaction
      * @param $account_type is account type id
      * @param $transaction_type is transaction type id
-     * @param $amount is transaction amount it could be positive or negative depends on demand
+     * @param double $amount is transaction amount it could be positive or negative depends on demand
      * @param $date is Transaction date
      * @param $user_id is user id from transaction
      * @param int $transaction_status is transaction status will be 0 => Inactive or 1 => Active
-     * @return array
+     * @return int|false
      */
 
     public function createTransaction($account_type, $transaction_type, $amount, $date, $user_id, $transaction_status = 1)
     {
         try {
             $account_model = new AccountModel();
-            $account_model->create([
+
+            $create_transaction = $account_model->create([
                 'user_id' => $user_id,
                 'amount' => $amount,
                 'account_type' => $account_type,
                 'transaction_type' => $transaction_type,
                 'transaction_date' => $date,
-                'transaction_status' => $transaction_status
+                'transaction_status' => $transaction_status,
             ]);
+
             if ($transaction_status == 1) {
                 $this->updateUserTotalBalance($user_id, $amount);
             }
-            return array('success' => 'Transaction successfully created');
+
+            return $create_transaction->id;
         } catch (Exception $e) {
-            return array('error' => 'Something wrong!');
+            return false;
+        }
+    }
+
+    /**
+     * This method is used for edit a transaction code
+     * @param int $transaction_id Transaction id
+     * @param string $transaction_code Transaction code
+     * @return bool
+     */
+
+    public function editTransactionCode($transaction_id, $transaction_code)
+    {
+        try {
+            $account_model = new AccountModel();
+
+            $create_transaction = $account_model->where('id', $transaction_id)
+                ->update(['transaction_code' => $transaction_code]);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
         }
     }
 
@@ -263,19 +287,23 @@ class WalletApi
             $save_transaction->transaction_status = $transaction_status;
             $save_transaction->save();
             $user_total_model = new UserTotalBalance();
-            if ($transaction_status == 1) {
-                $user_total = $user_total_model->find($transaction['user_id']);
-                if (!empty($user_total)) {
-                    $user_total->total_balance += $transaction['amount'];
-                    $user_total->save();
-                }
-            } else {
-                $user_total = $user_total_model->find($transaction['user_id']);
-                if (!empty($user_total)) {
-                    $user_total->total_balance -= $transaction['amount'];
-                    $user_total->save();
-                }
+
+            $user_total = $user_total_model->where('user_id', $transaction['user_id'])->first();
+            if (empty($user_total)) {
+                $user_total_model->create([
+                    "user_id" => $transaction['user_id'],
+                ]);
+                $user_total = $user_total_model->where('user_id', $transaction['user_id'])->first();
             }
+
+            if ($transaction_status == 1) {
+                    $user_total->total_balance += $transaction['amount'];
+            } else {
+                    $user_total->total_balance -= $transaction['amount'];
+            }
+
+            $user_total->save();
+
             return array('success' => 'Transaction successfully deleted');
         }
     }

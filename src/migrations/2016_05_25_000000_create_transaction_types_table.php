@@ -12,7 +12,7 @@ class CreateTransactionTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('transaction_types_table'), function (Blueprint $table) {
+        Schema::create(config('Wallet.transaction_types_table'), function (Blueprint $table) {
             $table->increments('id');
             $table->string('code')->unique();
             $table->boolean('status')->default(0);
@@ -26,6 +26,6 @@ class CreateTransactionTypesTable extends Migration
      */
     public function down()
     {
-        Schema::drop(config('transaction_types_table'));
+        Schema::drop(config('Wallet.transaction_types_table'));
     }
 }

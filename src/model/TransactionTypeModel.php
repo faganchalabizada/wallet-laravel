@@ -6,9 +6,10 @@ class TransactionTypeModel extends Model
     protected $table;
 
 
-    function __construct()
+    function __construct(array $attributes = array())
     {
-        $this->table = config('transaction_types_table');
+        parent::__construct($attributes);
+        $this->table = config('Wallet.transaction_types_table');
     }
 
 

@@ -12,7 +12,7 @@ class CreateAccountTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('account_types_table'), function (Blueprint $table) {
+        Schema::create(config('Wallet.account_types_table'), function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('code')->unique();
@@ -27,6 +27,6 @@ class CreateAccountTypesTable extends Migration
      */
     public function down()
     {
-        Schema::drop(config('account_types_table'));
+        Schema::drop(config('Wallet.account_types_table'));
     }
 }

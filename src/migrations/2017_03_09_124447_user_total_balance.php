@@ -12,11 +12,11 @@ class UserTotalBalance extends Migration
      */
     public function up()
     {
-        Schema::create(config('user_total_balance_table'), function (Blueprint $table) {
+        Schema::create(config('Wallet.user_total_balance_table'), function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->decimal('total_balance',10,2);
-            $table->date('modify_date');
+            $table->timestamp('modify_date')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));;
         });
     }
 
@@ -27,6 +27,7 @@ class UserTotalBalance extends Migration
      */
     public function down()
     {
-        Schema::drop(config('user_total_balance_table'));
+        Schema::drop(config('Wallet.user_total_balance_table'));
     }
 }
+

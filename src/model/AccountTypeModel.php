@@ -11,9 +11,10 @@ class AccountTypeModel extends Model
     protected $table;
 
 
-    function __construct()
+    function __construct(array $attributes = array())
     {
-        $this->table = config('account_types_table');
+        parent::__construct($attributes);
+        $this->table = config('Wallet.account_types_table');
     }
 
     /**

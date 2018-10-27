@@ -26,10 +26,10 @@ class WalletApi
      * @param $date is Transaction date
      * @param $user_id is user id from transaction
      * @param int $transaction_status is transaction status will be 0 => Inactive or 1 => Active
+     * @param string $transaction_code Transaction code
      * @return int|false
      */
-
-    public function createTransaction($account_type, $transaction_type, $amount, $date, $user_id, $transaction_status = 1)
+    public function createTransaction($account_type, $transaction_type, $amount, $date, $user_id, $transaction_status = 1, $transaction_code = "")
     {
         try {
             $account_model = new AccountModel();
@@ -41,6 +41,7 @@ class WalletApi
                 'transaction_type' => $transaction_type,
                 'transaction_date' => $date,
                 'transaction_status' => $transaction_status,
+                'transaction_code' => $transaction_code,
             ]);
 
             if ($transaction_status == 1) {
@@ -297,9 +298,9 @@ class WalletApi
             }
 
             if ($transaction_status == 1) {
-                    $user_total->total_balance += $transaction['amount'];
+                $user_total->total_balance += $transaction['amount'];
             } else {
-                    $user_total->total_balance -= $transaction['amount'];
+                $user_total->total_balance -= $transaction['amount'];
             }
 
             $user_total->save();

@@ -175,7 +175,7 @@ class WalletApi
     public function updateUserTotalBalance($user_id, $amount)
     {
         $user_total_balance_model = new UserTotalBalance();
-        $user_total = $user_total_balance_model->where('user_id', $user_id)->get();
+        $user_total = $user_total_balance_model->where('user_id', $user_id)->first();
 
         if (!empty($user_total)) {
             $user_total->total_balance += $amount;

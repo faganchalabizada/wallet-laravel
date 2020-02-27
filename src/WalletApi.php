@@ -192,7 +192,7 @@ class WalletApi
     /**
      * This method is used for fetch user wise balance by user Id
      */
-    public function static fetchUserBalance($user_id)
+    public static function fetchUserBalance($user_id)
     {
         $user_total_balance_model = new UserTotalBalance();
         $user_total = $user_total_balance_model->where('user_id', '=', $user_id)->get()->toArray();
